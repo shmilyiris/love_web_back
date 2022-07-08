@@ -14,9 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from views.index import index
 from views.getinfo import InfoView
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -25,6 +27,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('', index, name="index"),
     path('johnson_iris/', index, name="index"),
     path('johnson_iris/album/', index, name="index"),
@@ -32,7 +35,13 @@ urlpatterns = [
     path('johnson_iris/404/', index, name="index"),
     path('johnson_iris/register/', index, name="index"),
     path('johnson_iris/login/', index, name="index"),
+
     path('johnson_iris/api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('johnson_iris/api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('johnson_iris/getinfo/', InfoView.as_view(), name="getinfo"),
+
+    path('johnson_iris/photo/', include('photo.urls', namespace='photo')),
+    path('johnson_iris/event/', include('event.urls', namespace='event')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
